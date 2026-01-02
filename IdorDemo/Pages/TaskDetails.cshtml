@@ -1,0 +1,9 @@
+@page "{id:int}"
+@model TaskDetailsModel
+<h2>Task Details</h2>
+<div>
+    <p><strong>Title:</strong> @Model.UserTask.Title</p>
+    <p><strong>Secret Note:</strong> @Model.UserTask.SecretNote</p>
+    <p><strong>Owner:</strong> @Model.UserTask.OwnerUsername</p>
+</div>
+<a href="/">Back to List</a>

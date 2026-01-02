@@ -1,26 +1,42 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using RazorIdorDemo.Models;
+using RazorIdorDemo.Data;
+using Microsoft.EntityFrameworkCore;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// 1. Add Services
 builder.Services.AddRazorPages();
+// Using an In-Memory database for quick demonstration
+builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("DemoDb"));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// 2. Seed Data (Simulating Alice and Bob's private records)
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.UserTasks.AddRange(
+        new UserTask { Id = 1, Title = "Alice's Secret Plan", SecretNote = "Meet at the docks at midnight.", OwnerUsername = "Alice" },
+        new UserTask { Id = 2, Title = "Bob's plan Results", SecretNote = "meeting with James bond tonight", OwnerUsername = "Bob" }
+    );
+    db.SaveChanges();
+}
+
+// 3. Configure Pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
-
+app.UseStaticFiles();
 app.UseRouting();
-
-app.UseAuthorization();
-
-app.MapStaticAssets();
-app.MapRazorPages()
-   .WithStaticAssets();
+app.MapRazorPages();
 
 app.Run();
