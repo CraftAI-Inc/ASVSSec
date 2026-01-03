@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using HashidsNet;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,8 @@ builder.Services.AddRazorPages(options =>
     options.Conventions.AuthorizeFolder("/");
     options.Conventions.AllowAnonymousToPage("/Login"); // Critical: Don't lock yourself out of the login page!
 });
+
+builder.Services.AddSingleton<IHashids>(_ => new Hashids("this is a very secret salt phrase", 8));
 
 // Using an In-Memory database for quick demonstration
 builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("DemoDb"));
