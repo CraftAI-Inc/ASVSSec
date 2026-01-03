@@ -6,11 +6,25 @@ using RazorIdorDemo.Models;
 using RazorIdorDemo.Data;
 using Microsoft.EntityFrameworkCore;
 
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options => {
+        options.LoginPath = "/Login"; // Where to go if not logged in
+    });
+
 // 1. Add Services
-builder.Services.AddRazorPages();
+//builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizeFolder("/");
+    options.Conventions.AllowAnonymousToPage("/Login"); // Critical: Don't lock yourself out of the login page!
+});
+
 // Using an In-Memory database for quick demonstration
 builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("DemoDb"));
 
@@ -37,6 +51,10 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapRazorPages();
 
 app.Run();
