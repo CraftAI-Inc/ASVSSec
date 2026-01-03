@@ -15,6 +15,7 @@ public class TaskDetailsModel : PageModel
     {
         // VULNERABILITY: We fetch by ID but never verify if 
         // the current user (e.g., "Alice") actually owns this task.
+        
         // fix : && t.OwnerUsername == User.Identity.Name
         UserTask = await _context.UserTasks.FirstOrDefaultAsync(t => t.Id == id && t.OwnerUsername == User.Identity.Name);
 
