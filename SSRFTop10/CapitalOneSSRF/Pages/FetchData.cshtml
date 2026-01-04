@@ -1,19 +1,45 @@
 @page
 @model FetchDataModel
-@{ ViewData["Title"] = "Data Importer"; }
+@{
+    ViewData["Title"] = "Internal Data Fetcher";
+}
 
-<h2>Internal Data Importer</h2>
-<p>Use this tool to fetch data from internal APIs.</p>
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-page="/Index">Home</a></li>
+            <li class="breadcrumb-item active">Fetch Result</li>
+        </ol>
+    </nav>
 
-<div class="alert alert-warning">
-    <h4>Quick Navigation (Simulation Targets):</h4>
-    <ul>
-        <li><a href="?url=https://bing.com">Fetch External (Safe)</a></li>
-        <li><a href="?url=http://169.254.169.254/metadata/instance?api-version=2021-02-01">Fetch Azure Instance Metadata</a></li>
-        <li><a href="?url=http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01%26resource=https://management.azure.com/">Fetch Managed Identity Token</a></li>
-    </ul>
+    <div class="card shadow">
+        <div class="card-header @(Model.IsError ? "bg-danger" : "bg-primary") text-white">
+            <h3 class="mb-0">Server-Side Request Result</h3>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <strong>Requested URL:</strong> 
+                <code class="text-break">@Model.TargetUrl</code>
+            </div>
+
+            <label class="form-label"><strong>Raw Response from Server:</strong></label>
+            <div class="bg-dark text-light p-3 rounded" style="min-height: 200px; overflow-x: auto;">
+                @if (string.IsNullOrEmpty(Model.ApiResponse))
+                {
+                    <span class="text-muted">No data returned.</span>
+                }
+                else
+                {
+                    <pre class="mb-0">@Model.ApiResponse</pre>
+                }
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            <small>Note: This request was performed by the Web Server's IP, not your local machine.</small>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a asp-page="/Index" class="btn btn-secondary">Try Another URL</a>
+    </div>
 </div>
-
-<hr />
-<strong>Target URL:</strong> @Model.TargetUrl
-<pre style="background: #f4f4f4; padding: 15px;">@Model.ApiResponse</pre>
