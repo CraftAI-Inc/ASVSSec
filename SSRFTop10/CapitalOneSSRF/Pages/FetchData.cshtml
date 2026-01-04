@@ -1,0 +1,19 @@
+@page
+@model FetchDataModel
+@{ ViewData["Title"] = "Data Importer"; }
+
+<h2>Internal Data Importer</h2>
+<p>Use this tool to fetch data from internal APIs.</p>
+
+<div class="alert alert-warning">
+    <h4>Quick Navigation (Simulation Targets):</h4>
+    <ul>
+        <li><a href="?url=https://bing.com">Fetch External (Safe)</a></li>
+        <li><a href="?url=http://169.254.169.254/metadata/instance?api-version=2021-02-01">Fetch Azure Instance Metadata</a></li>
+        <li><a href="?url=http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01%26resource=https://management.azure.com/">Fetch Managed Identity Token</a></li>
+    </ul>
+</div>
+
+<hr />
+<strong>Target URL:</strong> @Model.TargetUrl
+<pre style="background: #f4f4f4; padding: 15px;">@Model.ApiResponse</pre>
